@@ -43,7 +43,7 @@ sudo systemctl restart NetworkManager
 ---
 
 ## 🔧 Firmware Boot Configuration
-To configure the system booting settings, edit the config file on your Raspberry Pi: 
+To configure the system booting settings, edit the config file on your Raspberry Pi: <br>
 `sudo vim /boot/firmware/config.txt`
 
 ### Configuration Steps
