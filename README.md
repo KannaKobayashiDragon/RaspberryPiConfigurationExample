@@ -1,6 +1,6 @@
 # RaspberryPiConfigurationExample
-RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.<br>
-
+RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.
+-
 🔧 Modify the following fields inside the file:
 psk=<Password>
 ssid=<your actual wireless SSID>
