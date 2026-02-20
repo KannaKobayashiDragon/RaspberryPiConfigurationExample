@@ -1,11 +1,11 @@
 RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.
 -
 🔧 Modify the following fields inside the file:
-psk=<Password>
-ssid=<your actual wireless SSID>
-id=<your actual wireless SSID>
+`psk=<Password>`
+`ssid=<your actual wireless SSID>`
+`id=<your actual wireless SSID>`
 
-Replace <Password> with your Wi-Fi password.
+Replace `<Password>` with your Wi-Fi password.
 Ensure both ssid and id match your exact wireless network name.
 
 📛 Rename the file
