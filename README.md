@@ -38,3 +38,27 @@ Set proper permissions:<br>
 
 Restart NetworkManager:<br>
 `sudo systemctl restart NetworkManager`<br>
+
+-
+
+## 🔧 Firmware Boot Configuration
+To configure the system booting settings, edit the config file on your Raspberry Pi: 
+`sudo vim /boot/firmware/config.txt`
+
+### Configuration Steps
+You can find an example configuration in this repo: [config.txt]
+(https://github.com/KannaKobayashiDragon/RaspberryPiConfigurationExample/blob/main/config.txt)
+
+* **Update Hardware Sections:** Delete the `[cm4]` and `[cm5]` sections. Replace them with the `[all]` section provided in the repository to ensure the settings apply to all models.
+
+```ini
+[all]
+enable_uart=1
+dtoverlay=dwc2,dr_mode=peripheral
+Headless Mode: If you are running the Pi without a monitor (headless), go to the bottom of the file and comment out the HDMI output lines. This saves about 20-30mA of power and improves Wi-Fi stability.
+
+# Disable HDMI output completely to save power and improve Wi-Fi stability
+hdmi_ignore_hotplug=1
+hdmi_blanking=1
+```
+
