@@ -17,7 +17,7 @@ Edit the following inside the file:
 * `ssid=<your actual wireless SSID>`
 * `id=<your actual wireless SSID>`
 
-📛 Replace `<Password>` with your Wi-Fi password.
+📛 Replace `<Password>` with your Wi-Fi password.<br>
 📛 Ensure both `ssid` and `id` match your exact wireless network name.
 
 ### 2️⃣ Rename the File
