@@ -72,3 +72,31 @@ This saves about 20-30mA of power and improves Wi-Fi stability.
 hdmi_ignore_hotplug=1
 hdmi_blanking=1
 ```
+
+---
+
+## 🔌 USB Gadget Mode Configuration
+To configure the USB gadget mode modules, edit the following configuration file:
+`sudo vim /etc/modules-load.d/usb-gadget.conf`
+
+### Configuration Steps
+You can find an example configuration in this repo: [usb-gadget.config](https://github.com/KannaKobayashiDragon/RaspberryPiConfigurationExample/blob/main/usb-gadget.config)
+
+### Validation
+Reboot the Raspberry Pi and verify that the modules have loaded correctly:
+
+```bash
+sudo reboot
+```
+
+# After the system reboots and you reconnect, run:
+```bash
+lsmod | grep -E 'dwc2|libcomposite'
+```
+
+**Expected Output:**
+```text
+libcomposite           65536  10 usb_f_hid
+dwc2                  176128  0
+roles                  16384  1 dwc2
+```
