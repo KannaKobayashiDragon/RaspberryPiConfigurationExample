@@ -49,7 +49,8 @@ To configure the system booting settings, edit the config file on your Raspberry
 ### Configuration Steps
 You can find an example configuration in this repo: [config.txt](https://github.com/KannaKobayashiDragon/RaspberryPiConfigurationExample/blob/main/config.txt)
 
-* **Update Hardware Sections:** Delete the `[cm4]` and `[cm5]` sections. Replace them with the `[all]` section provided in the repository to ensure the settings apply to all models.
+* **Update Hardware Sections:** Delete the `[cm4]` and `[cm5]` sections.<br>
+Replace them with the `[all]` section provided in the repository to ensure the settings apply to all models
 
 ```ini
 [all]
@@ -57,7 +58,8 @@ enable_uart=1
 dtoverlay=dwc2,dr_mode=peripheral
 ```
 
-* **Headless Mode:** If you are running the Pi without a monitor (headless), go to the bottom of the file and comment out the HDMI output lines. This saves about 20-30mA of power and improves Wi-Fi stability.
+* **Headless Mode:** If you are running the Pi without a monitor (headless), go to the bottom of the file and comment out the HDMI output lines.<br>
+This saves about 20-30mA of power and improves Wi-Fi stability.
 
 ```ini
 # Enable DRM VC4 V3D driver
