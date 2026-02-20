@@ -1,0 +1,11 @@
+[Unit]
+Description=USB HID Gadget Initialization
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/HID_Gadget
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
