@@ -76,7 +76,7 @@ hdmi_blanking=1
 ---
 
 ## 🔌 USB Gadget Mode Configuration
-To configure the USB gadget mode modules, edit the following configuration file:
+To configure the USB gadget mode modules, edit the following configuration file:<br>
 `sudo vim /etc/modules-load.d/usb-gadget.conf`
 
 ### Configuration Steps
