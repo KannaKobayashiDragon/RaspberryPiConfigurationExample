@@ -89,7 +89,7 @@ Reboot the Raspberry Pi and verify that the modules have loaded correctly:
 sudo reboot
 ```
 
-# After the system reboots and you reconnect, run:
+After the system reboots and you reconnect, run:
 ```bash
 lsmod | grep -E 'dwc2|libcomposite'
 ```
