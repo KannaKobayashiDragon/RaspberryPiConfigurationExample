@@ -1,0 +1,127 @@
+#!/bin/bash
+# HID Gadget Configuration Script
+# Creates a USB-HID Keyboard device at /dev/hidg0
+
+# Exit On Any Error (# The Script DIES Upon Execution Error. The next line never happens.)
+# exit 1 can Trigger this Exit on Any Error
+set -e
+echo "[INFO] Starting HID Gadget Initialization..."
+
+# Remove Existing Gadget if Present (Idempotency)
+# A Fresh Re-starting Logic on Call (USB Gadget Configuration Files)
+if [ -d /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget ]; then
+    echo "[INFO] Removing Existing Gadget Configuration..."
+    # Writing an empty string ("") to the UDC file tells the kernel: "Disconnect this gadget from the hardware immediately."
+    # UDC : A specific file that bridges the gap between your Software Configuration (the scripts you wrote) and the Hardware Driver (dwc2).
+    # Imagine a Software Toggle Switch on the USB Connection. ["20980000.usb" : ON] ["" : OFF]
+    echo "" > /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/UDC 2>/dev/null || true
+    # Wipe Configuration Settings (Included Bridge Link Directory)
+    rm -f /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/configs/c.1/hid.raspkey 2>/dev/null || true
+    rmdir /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/configs/c.1/strings/0x409 2>/dev/null || true
+    rmdir /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/configs/c.1 2>/dev/null || true
+    # Wipe Function Configuration Settings (Bridge Link Source Directory)
+    rmdir /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/functions/hid.raspkey 2>/dev/null || true
+    rmdir /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/strings/0x409 2>/dev/null || true
+    # Wipe Whole USB Gadget Entry (Clean Wipe)
+    rmdir /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget 2>/dev/null || true
+    sleep 1
+fi
+
+# CRITICAL: Check If USB Device Controller (Directory) Exists (dwc2)
+# If the directory /sys/class/udc does NOT exist, then do the code inside.
+if [ ! -d /sys/class/udc ]; then
+    echo "[ERROR] /sys/class/udc does not exist"
+    echo "[ERROR] USB Gadget Mode(Peripheral) is not supported or dwc2 module not loaded"
+    exit 1
+fi
+
+# CRITICAL: Check If USB Device Controller (USB Object[.usb]) Exists (dwc2)
+# -z: This checks if the string is Zero length (empty).
+UDC_DEVICE=$(ls /sys/class/udc 2>/dev/null | head -n 1)
+
+# Disconnect first (just in case)
+echo "" > /sys/kernel/config/usb_gadget/HID_Keyboard_Gadget/UDC || true
+sleep 0.2
+
+if [ -z "$UDC_DEVICE" ]; then
+    echo "[ERROR] No USB Device Controller Found In /sys/class/udc"
+    echo "[ERROR] Possible Causes:"
+    echo "1. Wrong USB Port (Must Use OTG port)"
+    echo "2. dwc2 Module Not Loaded (check: lsmod | grep dwc2)"
+    echo "3. Not In Peripheral Mode (Raspberry Pi 2 0W in Host Mode By Default)"
+    echo "4. Bad USB Cable (Must Be Data Cable, Not Power-Only)"
+    exit 1
+fi
+
+# USB Device Controller Successfully Registered as an Peripheral USB via dwc2
+echo "[OK] Found USB Device Controller: $UDC_DEVICE"
+
+cd /sys/kernel/config/usb_gadget/
+mkdir -p HID_Keyboard_Gadget
+cd HID_Keyboard_Gadget
+
+# Device Identification (This is For System and Vendor)
+echo 0x1d6b > idVendor   # (Compulsory) 0x1d6b : Generic Linux Foundation Gadget
+echo 0x0104 > idProduct  # (Compulsory) 0x0104 : Multifunction Composite Gadget (Vendor)
+echo 0x0100 > bcdDevice  # Arbitrary : v1.0.0
+echo 0x0200 > bcdUSB     # (Compulsory) : USB 2.0
+
+# Device Strings (Digital ID Card) - (This is For Human and User)
+# USB Device String Descriptors (First-Layer)
+# 0x409 : English
+mkdir -p strings/0x409
+# Vendor Serial Number - Must be unique per device model - Vendor Generated - Can cause Conflict if both same Serial plugged-in.
+# Length 1 Character - 126 Character : Under 30 is Safe for Compatibility - At least 12 for Windows Compatibility
+# ASSUREDW0000001 : 15 Length
+echo "ASSUREDW0000001" > strings/0x409/serialnumber
+echo "Raspberry OS Lite" > strings/0x409/manufacturer
+echo "Raspberry HID Keyboard" > strings/0x409/product
+
+# Configuration
+# This is a Configuration String (English-0x409), and Human-Readable in Device-Manager from Connected Windows.
+mkdir -p configs/c.1/strings/0x409
+# Naming of the Configuration - USB Device Applied Configuration of "Config 1: HID Keyboard"
+echo "Config 1: HID Keyboard" > configs/c.1/strings/0x409/configuration
+
+# Max Power Consumption Configuration - 500mA (1 Power Unit in USB2 = 2mA)
+# This is High-Power Device Configuration (Standard MAX for USB2.0) - Disable Mini-HDMI Mode to reduce Power Consumption
+echo 250 > configs/c.1/MaxPower
+
+# HID Function - Keyboard
+# <Function_Type(Fixed)>.<Instance_Name(Arbitrary))> : To Tell the Linux Kernel to Load HID Driver Logic for This Function
+mkdir -p functions/hid.raspkey
+# Keyboard Protocol : 0:None, 1:Keyboard, 2:Mouse
+echo 1 > functions/hid.raspkey/protocol
+# Boot interface subclass
+# 0: Non-Boot Protocol, Not Working in BIOS
+# 1: Boot Protocol, Working in BIOS
+echo 1 > functions/hid.raspkey/subclass
+# Allocate Exactly 8 Bytes of Memory. - Keyboard use only 8 - Must match Report Descriptor
+echo 8 > functions/hid.raspkey/report_length
+# HID Report Descriptor for standard keyboard
+# This exact string of hex is standard. You will see it in almost every USB Keyboard project.
+# Total Input Size: 1 Byte (Mods) + 1 Byte (Reserved) + 6 Bytes (Keys) = 8 Bytes. (Match report_length)
+echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x01\\x05\\x08\\x19\\x01\\x29\\x05\\x91\\x02\\x95\\x01\\x75\\x03\\x91\\x03\\x95\\x06\\x75\\x08\\x15\\x00\\x25\\x65\\x05\\x07\\x19\\x00\\x29\\x65\\x81\\x00\\xc0 > functions/hid.raspkey/report_desc
+# Link function to configuration (Bridge)
+ln -s functions/hid.raspkey configs/c.1/
+
+# Bind to USB Device Controller
+echo "$UDC_DEVICE" > UDC
+
+echo "[OK] USB gadget bound to $UDC_DEVICE"
+
+# Wait for device creation
+sleep 2
+
+# Check if /dev/hidg0 was created
+if [ ! -c /dev/hidg0 ]; then
+    echo "[ERROR] /dev/hidg0 was not created!"
+    echo "[ERROR] HID function binding failed"
+    exit 1
+fi
+
+# Set permissions for HID device
+chmod 666 /dev/hidg0
+
+echo "[SUCCESS] HID Gadget initialized: /dev/hidg0"
+ls -l /dev/hidg0
