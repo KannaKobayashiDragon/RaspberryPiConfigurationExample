@@ -100,3 +100,43 @@ libcomposite           65536  10 usb_f_hid
 dwc2                  176128  0
 roles                  16384  1 dwc2
 ```
+
+---
+
+## ⌨️ HID Setup Scripting
+To set up the HID gadget script, create and edit the following file:<br>
+`sudo vim /usr/bin/HID_Gadget`
+
+### Script Configuration
+You can find an example script in this repo: [HID_GADGET](https://github.com/KannaKobayashiDragon/RaspberryPiConfigurationExample/blob/main/HID_GADGET)
+
+Make the script executable:<br>
+```bash
+sudo chmod +x /usr/bin/HID_Gadget
+```
+
+### Register as a Daemon Service
+Create and configure the systemd service to run the HID gadget script on boot:<br>
+`sudo vim /etc/systemd/system/raspkey-usbhid.service`
+
+### Reboot and Validate
+Reboot the Raspberry Pi using an **OTG Cable connected to the Data Port**:<br>
+```bash
+sudo reboot
+```
+
+After rebooting, check if the HID device was created successfully:<br>
+```bash
+ls -l /dev/hidg0
+```
+
+### 🧪 HID Testing
+If `/dev/hidg0` exists, test the keyboard output. The following commands will type the letter '**a**' on the connected workstation.<br>
+
+```bash
+# Press 'a'
+echo -ne "\x00\x00\x04\x00\x00\x00\x00\x00" | sudo tee /dev/hidg0 > /dev/null
+
+# Release the key
+echo -ne "\x00\x00\x00\x00\x00\x00\x00\x00" | sudo tee /dev/hidg0 > /dev/null
+```
