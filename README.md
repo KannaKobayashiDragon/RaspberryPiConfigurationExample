@@ -1,7 +1,5 @@
 RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.
 -
-
-# iPhone.nmconnection
 NetworkManager Wi-Fi Configuration (iPhone.nmconnection)<br>
 ⚠️ This file is a NetworkManager Wi-Fi configuration file designed to replace the traditional bootfs Wi-Fi setup method. <br>
 ⚠️ The bootfs configuration is often unreliable and non-persistent, whereas the .nmconnection file provides a stable and persistent network configuration managed directly by NetworkManager.<br>
