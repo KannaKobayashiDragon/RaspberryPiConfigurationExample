@@ -5,7 +5,9 @@ NetworkManager Wi-Fi Configuration (iPhone.nmconnection)<br>
 ⚠️ The bootfs configuration is often unreliable and non-persistent, whereas the .nmconnection file provides a stable and persistent network configuration managed directly by NetworkManager.<br>
 ⚠️ This configuration enables automatic connection on boot and ensures that the Raspberry Pi maintains its wireless settings across reboots.<br>
 ⚠️ Compatibility Notice<br>
-This configuration only supports WPA-PSK (WPA Personal) networks, such as mobile phone hotspots or standard home Wi-Fi routers. It does not support enterprise or organization networks that use authentication protocols such as WPA-Enterprise (e.g., 802.1X, EAP).<br>
+This configuration only supports WPA-PSK (WPA Personal) networks, such as mobile phone hotspots or standard home Wi-Fi routers. It does not support enterprise or organization networks that use authentication protocols such as WPA-Enterprise (e.g., 802.1X, EAP).<br><br>
+
+🔧 Configuration Guides
 🔧 Modify the following fields inside the file:<br>
 `psk=<Password>`<br>
 `ssid=<your actual wireless SSID>`<br>
