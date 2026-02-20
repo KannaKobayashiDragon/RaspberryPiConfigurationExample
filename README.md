@@ -1,9 +1,9 @@
 ## NetworkManager Wi-Fi Configuration (iPhone.nmconnection)
 
-⚠️ This file replaces the traditional `bootfs` Wi-Fi setup method.
-⚠️ The `bootfs` method is often unreliable and non-persistent.
-⚠️ The `.nmconnection` file provides a stable and persistent configuration managed directly by NetworkManager.
-⚠️ It enables automatic connection on boot and maintains wireless settings across reboots.
+⚠️ This file replaces the traditional `bootfs` Wi-Fi setup method.<br>
+⚠️ The `bootfs` method is often unreliable and non-persistent.<br>
+⚠️ The `.nmconnection` file provides a stable and persistent configuration managed directly by NetworkManager.<br>
+⚠️ It enables automatic connection on boot and maintains wireless settings across reboots.<br>
 
 ### Compatibility Notice
 This configuration only supports **WPA-PSK (WPA Personal)** networks such as mobile phone hotspots or home Wi-Fi routers.
@@ -60,6 +60,12 @@ dtoverlay=dwc2,dr_mode=peripheral
 * **Headless Mode:** If you are running the Pi without a monitor (headless), go to the bottom of the file and comment out the HDMI output lines. This saves about 20-30mA of power and improves Wi-Fi stability.
 
 ```ini
+# Enable DRM VC4 V3D driver
+# dtoverlay=vc4-kms-v3d
+# max_framebuffers=2
+# Uncomment this section if using non Headless-Mode on Raspberry Pi. 
+# - Reduce 20-30 mA
+
 # Disable HDMI output completely to save power and improve Wi-Fi stability
 hdmi_ignore_hotplug=1
 hdmi_blanking=1
