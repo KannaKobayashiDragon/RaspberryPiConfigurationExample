@@ -7,7 +7,7 @@ NetworkManager Wi-Fi Configuration (iPhone.nmconnection)<br>
 ⚠️ Compatibility Notice<br>
 This configuration only supports WPA-PSK (WPA Personal) networks, such as mobile phone hotspots or standard home Wi-Fi routers. It does not support enterprise or organization networks that use authentication protocols such as WPA-Enterprise (e.g., 802.1X, EAP).<br><br>
 
-🔧 Configuration Guides
+🔧 Configuration Guides<br>
 🔧 Modify the following fields inside the file:<br>
 `psk=<Password>`<br>
 `ssid=<your actual wireless SSID>`<br>
