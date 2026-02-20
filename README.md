@@ -1,5 +1,5 @@
 # RaspberryPiConfigurationExample
-RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.
+RaspberryPiConfigurationExample is a configuration repository designed specifically for the Raspberry Pi Zero 2 W.<br>
 
 🔧 Modify the following fields inside the file:
 psk=<Password>
@@ -20,4 +20,4 @@ Set proper permissions:
 sudo chmod 600 <filename>.nmconnection
 
 Restart NetworkManager to apply changes:
-sudo systemctl restart NetworkManager
+sudo systemctl restart NetworkManager<br>
